@@ -1,0 +1,387 @@
+{
+  "datasets": [
+    {
+      "name": "825a2197",
+      "displayName": "passes_by_hour",
+      "queryLines": [
+        "SELECT *\r\n",
+        "FROM veloradar.gold.passes_by_hour\r\n",
+        "ORDER BY hour_local"
+      ]
+    },
+    {
+      "name": "837ccc47",
+      "displayName": "speed_by_direction",
+      "queryLines": [
+        "SELECT\r\n",
+        "  CASE direction\r\n",
+        "    WHEN 'left_to_right' THEN 'Left → Right'\r\n",
+        "    WHEN 'right_to_left' THEN 'Right → Left'\r\n",
+        "    ELSE direction\r\n",
+        "  END AS direction,\r\n",
+        "  total_passes,\r\n",
+        "  avg_speed_kmh,\r\n",
+        "  max_speed_kmh,\r\n",
+        "  min_speed_kmh,\r\n",
+        "  avg_elapsed_ms\r\n",
+        "FROM veloradar.gold.speed_by_direction"
+      ]
+    },
+    {
+      "name": "d46e3cc6",
+      "displayName": "speed_distribution",
+      "queryLines": [
+        "SELECT *\r\n",
+        "FROM veloradar.gold.speed_distribution\r\n",
+        "ORDER BY speed_band_start_kmh"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "e1128e4e",
+      "displayName": "Overview",
+      "layout": [
+        {
+          "widget": {
+            "name": "total-passes",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "837ccc47",
+                  "fields": [
+                    {
+                      "name": "sum(total_passes)",
+                      "expression": "SUM(`total_passes`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Total passes",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(total_passes)"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 1,
+            "height": 5
+          }
+        },
+        {
+          "widget": {
+            "name": "max-speed-kmh",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "837ccc47",
+                  "fields": [
+                    {
+                      "name": "max(max_speed_kmh)",
+                      "expression": "MAX(`max_speed_kmh`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Max speed (km/h)",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "max(max_speed_kmh)"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 1,
+            "y": 2,
+            "width": 2,
+            "height": 5
+          }
+        },
+        {
+          "widget": {
+            "name": "passes-per-hour",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "825a2197",
+                  "fields": [
+                    {
+                      "name": "hourly(hour_local)",
+                      "expression": "DATE_TRUNC(\"HOUR\", `hour_local`)"
+                    },
+                    {
+                      "name": "sum(total_passes)",
+                      "expression": "SUM(`total_passes`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Passes per hour",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "hourly(hour_local)",
+                  "axis": {
+                    "title": "Hour (Brasília)"
+                  },
+                  "scale": {
+                    "type": "temporal"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(total_passes)",
+                  "axis": {
+                    "title": "Passes"
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 2,
+            "width": 6,
+            "height": 5
+          }
+        },
+        {
+          "widget": {
+            "name": "average-speed-by-direction-kmh",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "837ccc47",
+                  "fields": [
+                    {
+                      "name": "direction",
+                      "expression": "`direction`"
+                    },
+                    {
+                      "name": "avg(avg_speed_kmh)",
+                      "expression": "AVG(`avg_speed_kmh`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Average speed by direction (km/h)",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "direction",
+                  "axis": {
+                    "title": "Direction"
+                  },
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "avg(avg_speed_kmh)",
+                  "axis": {
+                    "title": "Average speed (km/h)"
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "direction",
+                  "legend": {
+                    "hide": true
+                  },
+                  "scale": {
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "Right → Left",
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 2
+                        }
+                      }
+                    ]
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 7,
+            "width": 4,
+            "height": 5
+          }
+        },
+        {
+          "widget": {
+            "name": "speed-distribution-passes-per-1-kmh-band",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "d46e3cc6",
+                  "fields": [
+                    {
+                      "name": "speed_band",
+                      "expression": "`speed_band`"
+                    },
+                    {
+                      "name": "sum(total_passes)",
+                      "expression": "SUM(`total_passes`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Speed distribution (passes per 1 km/h band)",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "speed_band",
+                  "axis": {
+                    "title": "Speed band"
+                  },
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(total_passes)",
+                  "axis": {
+                    "title": "Passes"
+                  },
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "label": {
+                  "show": true
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 7,
+            "width": 5,
+            "height": 5
+          }
+        },
+        {
+          "widget": {
+            "name": "c1cc3fb5",
+            "spec": {
+              "widgetType": "text",
+              "version": 1,
+              "encodings": {
+                "text": {
+                  "lines": [
+                    "# VeloRadar – Real-time Speed Monitoring\n",
+                    "\n",
+                    "Speed and direction of objects passing two ultrasonic sensors (HC-SR04), streamed in real time through **Arduino → MQTT → Kafka → Databricks** (Lakeflow Declarative Pipelines, Medallion Architecture). Times in Brasília (UTC-3)."
+                  ],
+                  "fields": []
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 9,
+            "height": 2
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}

@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Secrets and local configuration
+.env
+*.env
+
+# Local data (only the sample file goes to the repository)
+events.jsonl
+data/*
+!data/sample_events.jsonl
+
+# Operating system and editors
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
