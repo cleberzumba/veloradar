@@ -5,7 +5,7 @@
       "displayName": "passes_by_hour",
       "queryLines": [
         "SELECT *\r\n",
-        "FROM veloradar.gold.passes_by_hour\r\n",
+        "FROM veloradar_prod.gold.passes_by_hour\r\n",
         "ORDER BY hour_local"
       ]
     },
@@ -24,7 +24,7 @@
         "  max_speed_kmh,\r\n",
         "  min_speed_kmh,\r\n",
         "  avg_elapsed_ms\r\n",
-        "FROM veloradar.gold.speed_by_direction"
+        "FROM veloradar_prod.gold.speed_by_direction"
       ]
     },
     {
@@ -32,7 +32,7 @@
       "displayName": "speed_distribution",
       "queryLines": [
         "SELECT *\r\n",
-        "FROM veloradar.gold.speed_distribution\r\n",
+        "FROM veloradar_prod.gold.speed_distribution\r\n",
         "ORDER BY speed_band_start_kmh"
       ]
     }
