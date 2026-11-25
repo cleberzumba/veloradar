@@ -1,0 +1,67 @@
+name: CI/CD
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+  DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+
+jobs:
+  test:
+    name: Tests and bundle validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install test dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Run tests
+        run: python -m pytest -v
+
+      - uses: databricks/setup-cli@main
+
+      - name: Validate bundle
+        run: |
+          databricks bundle validate -t stage
+          databricks bundle validate -t prod
+
+  deploy-stage:
+    name: Deploy and run on stage
+    needs: test
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    environment: stage
+    steps:
+      - uses: actions/checkout@v4
+      - uses: databricks/setup-cli@main
+
+      - name: Deploy bundle to stage
+        run: databricks bundle deploy -t stage
+
+      - name: Run the job on stage
+        run: databricks bundle run -t stage veloradar_job
+
+  deploy-prod:
+    name: Deploy and run on prod
+    needs: deploy-stage
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - uses: actions/checkout@v4
+      - uses: databricks/setup-cli@main
+
+      - name: Deploy bundle to prod
+        run: databricks bundle deploy -t prod
+
+      - name: Run the job on prod
+        run: databricks bundle run -t prod veloradar_job
