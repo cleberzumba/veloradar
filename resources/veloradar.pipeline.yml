@@ -1,7 +1,7 @@
 resources:
   pipelines:
     veloradar_pipeline:
-      name: veloradar_pipeline
+      name: veloradar_pipeline_${bundle.target}
       catalog: ${var.catalog}
       schema: bronze
       serverless: true

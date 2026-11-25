@@ -1,7 +1,7 @@
 resources:
   jobs:
     veloradar_job:
-      name: veloradar_job
+      name: veloradar_job_${bundle.target}
       schedule:
         quartz_cron_expression: "0 0/15 * * * ?"
         timezone_id: America/Sao_Paulo
