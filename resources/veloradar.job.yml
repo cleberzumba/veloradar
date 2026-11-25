@@ -1,0 +1,11 @@
+resources:
+  jobs:
+    veloradar_job:
+      name: veloradar_job
+      schedule:
+        quartz_cron_expression: "0 0/15 * * * ?"
+        timezone_id: America/Sao_Paulo
+      tasks:
+        - task_key: refresh_pipeline
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.veloradar_pipeline.id}

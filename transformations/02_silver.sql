@@ -19,13 +19,13 @@ AS SELECT
   CAST(received_at AS TIMESTAMP) AS event_time,
   source_file,
   ingested_at
-FROM STREAM(veloradar.bronze.events);
+FROM STREAM(bronze.events);
 
 -- 2) Deduplicated silver table (one row per Kafka message)
-CREATE OR REFRESH STREAMING TABLE veloradar.silver.events
+CREATE OR REFRESH STREAMING TABLE silver.events
 COMMENT 'Validated, typed and deduplicated VeloRadar pass events';
 
-CREATE FLOW silver_events_dedup AS AUTO CDC INTO veloradar.silver.events
+CREATE FLOW silver_events_dedup AS AUTO CDC INTO silver.events
 FROM STREAM(events_validated)
 KEYS (kafka_partition, kafka_offset)
 SEQUENCE BY ingested_at

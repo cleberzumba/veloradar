@@ -1,0 +1,19 @@
+bundle:
+  name: veloradar
+
+include:
+  - resources/*.yml
+
+variables:
+  catalog:
+    description: Unity Catalog catalog for this environment
+  source_path:
+    description: Landing volume path where the raw JSONL event files arrive
+
+targets:
+  dev:
+    mode: development
+    default: true
+    variables:
+      catalog: veloradar_dev
+      source_path: /Volumes/veloradar_dev/landing/events/

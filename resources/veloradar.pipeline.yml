@@ -1,0 +1,13 @@
+resources:
+  pipelines:
+    veloradar_pipeline:
+      name: veloradar_pipeline
+      catalog: ${var.catalog}
+      schema: bronze
+      serverless: true
+      continuous: false
+      configuration:
+        source_path: ${var.source_path}
+      libraries:
+        - glob:
+            include: ../transformations/**

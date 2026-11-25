@@ -24,6 +24,7 @@
 
 import io
 import json
+import os
 import time
 from datetime import datetime, timezone
 
@@ -34,7 +35,7 @@ KAFKA_BOOTSTRAP = "localhost:9092"
 KAFKA_TOPIC = "veloradar-events"
 KAFKA_GROUP_ID = "veloradar-databricks-uploader"
 
-VOLUME_PATH = "/Volumes/veloradar/landing/events"
+VOLUME_PATH = os.environ.get("VELORADAR_VOLUME_PATH", "/Volumes/veloradar_dev/landing/events")
 
 BATCH_MAX_EVENTS = 50
 BATCH_MAX_SECONDS = 30
